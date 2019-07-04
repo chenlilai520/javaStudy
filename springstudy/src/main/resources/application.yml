@@ -9,9 +9,17 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
  data:
-  elasticsearch:
-    repositories:
-      enabled: true
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:9300
+      repositories:
+        enabled: true
+##      cluster-name: cifmedia
+#      #      开发服 192.168.163.118  测试服 192.168.163.128
+#      cluster-nodes: 127.0.0.1:9300
+#      local: false
+#      repositories:
+#        enabled: true
+
 
  application:
     name: lilai

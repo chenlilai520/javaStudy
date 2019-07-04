@@ -1,13 +1,17 @@
 package com.spring.springstudy.controller;
 
+import com.spring.springstudy.VO.UserVO;
 import com.spring.springstudy.response.ResponseWrap;
+import com.spring.springstudy.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author chenlilai
@@ -22,10 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
 
-    @PostMapping("/hello")
-    @ApiOperation(value = "第一个swagge-API")
-    public ResponseWrap getById(@ApiParam(value = "活动Id") @RequestParam(required = false) Integer id){
+    @Autowired
+    private UserService userService;
 
-        return ResponseWrap.success(1);
+    @PostMapping("/add")
+    @ApiOperation(value = "添加swagger数据")
+    public ResponseWrap add(@RequestBody UserVO user){
+        return         userService.insertUsert(user);
+    }
+
+    @PostMapping("/selectAll")
+    @ApiOperation(value = "查询所有swagger数据")
+    public ResponseWrap<List<UserVO>> selectAll(){
+        return  userService.selectAll();
     }
 }
