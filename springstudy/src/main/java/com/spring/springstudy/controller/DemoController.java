@@ -30,14 +30,28 @@ public class DemoController {
     private UserService userService;
 
     @PostMapping("/add")
-    @ApiOperation(value = "添加swagger数据")
+    @ApiOperation(value = "添加Elasticsearch数据")
     public ResponseWrap add(@RequestBody UserVO user){
         return         userService.insertUsert(user);
     }
 
     @PostMapping("/selectAll")
-    @ApiOperation(value = "查询所有swagger数据")
+    @ApiOperation(value = "查询所有Elasticsearch数据")
     public ResponseWrap<List<UserVO>> selectAll(){
         return  userService.selectAll();
     }
+
+    @PostMapping("/bulkIndex")
+    @ApiOperation(value = "批量添加Elasticsearch数据")
+    public ResponseWrap<List<UserVO>> bulkIndex(){
+        return  userService.bulkIndex();
+    }
+
+    @PostMapping("/queryNearby")
+    @ApiOperation(value = "查询附近的人")
+    public ResponseWrap<List<UserVO>> queryNearby(){
+        return  userService.queryNearby(114.02597366,22.54605355);
+    }
+
+
 }

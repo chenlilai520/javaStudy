@@ -27,4 +27,11 @@ public interface UserService {
      * @return
      */
     ResponseWrap<List<UserVO>> selectAll();
+
+
+
+    ResponseWrap queryNearby(double longitude,double latitude);
+
+
+    ResponseWrap bulkIndex();
 }

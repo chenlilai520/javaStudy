@@ -1,24 +1,32 @@
 package com.spring.springstudy.VO;
 
+import org.elasticsearch.common.geo.GeoPoint;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * @author chenlilai
- * @title: timeStoreVO
+ * @title: TimeStoreVO
  * @projectName javaStudy1
  * @description:
  * @date 2019/7/415:18
  */
 @Document(indexName = "timestore", type = "product")
-public class timeStoreVO {
+public class TimeStoreVO {
     private Long id;
 
     private String name;
 
-    private double latitude; //纬度
+    private String city;
 
-    private double longitude; //经度
+    private GeoPoint location;
 
+    public GeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoPoint location) {
+        this.location = location;
+    }
 
     public Long getId() {
         return id;
@@ -36,29 +44,21 @@ public class timeStoreVO {
         this.name = name;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getCity() {
+        return city;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     @Override
     public String toString() {
-        return "timeStoreVO{" +
+        return "TimeStoreVO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", city='" + city + '\'' +
+                ", location=" + location +
                 '}';
     }
 }
