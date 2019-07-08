@@ -1,22 +1,23 @@
 package com.spring.springstudy.service.impl;
 
 import com.spring.springstudy.VO.TimeStoreVO;
-import com.spring.springstudy.VO.UserVO;
 import com.spring.springstudy.response.ResponseWrap;
 import com.spring.springstudy.service.UserService;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Service;
@@ -41,13 +42,16 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
 
+    @Autowired
+    private TransportClient transportClient;
+
     @Override
-    public ResponseWrap insertUsert(UserVO user) {
+    public ResponseWrap insertUsert(TimeStoreVO user) {
         double lat = 22.54605324;
         double lon = 114.02597315;
         TimeStoreVO timeStoreVO=new TimeStoreVO();
         timeStoreVO.setCity("湖南");
-        timeStoreVO.setId(11112L);
+        timeStoreVO.setUserId(11112L);
         GeoPoint geoPoint =new GeoPoint(lat,lon);
         timeStoreVO.setLocation(geoPoint);
 
@@ -67,7 +71,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseWrap<List<UserVO>> selectAll() {
+    public ResponseWrap<List<TimeStoreVO>> selectAll() {
         SortBuilder sortBuilder = SortBuilders.fieldSort("age")   //排序字段
                 .order(SortOrder.DESC);   //排序方式
 
@@ -86,31 +90,40 @@ public class UserServiceImpl implements UserService{
                 //.withFilter(boolQuery().must(matchQuery("name","汤金浪")).filter(rangeQuery("age").gt(15))) // 这里是过滤条件
                 .build();
 
-         List<UserVO> list=elasticsearchTemplate.queryForList(searchQuery,UserVO.class);
+         List<TimeStoreVO> list=elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
          return ResponseWrap.success(list);
     }
 
     @Override
     public ResponseWrap queryNearby(double longitude, double latitude) {
         GeoPoint geoPoint=new GeoPoint(latitude,longitude);
-        GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders.geoDistanceQuery("location").point(geoPoint).distance(100, DistanceUnit.KILOMETERS);
-
+        GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders.geoDistanceQuery("location").point(geoPoint).distance(100, DistanceUnit.KILOMETERS); //distace 代表100千米  KILOMETERS 千米
+//
         GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("location",geoPoint)
-                .unit(DistanceUnit.METERS)
+                .unit(DistanceUnit.KILOMETERS)
                 .order(SortOrder.ASC);
+//
+//        Pageable pageable =PageRequest.of(0, 50);
+//
+        BoolQueryBuilder boolQueryBuilder = boolQuery();
+        boolQueryBuilder.mustNot(termQuery("city","湖"));
+        boolQueryBuilder.filter(geoDistanceQueryBuilder);
 
-        Pageable pageable =PageRequest.of(0, 50);
+//
+//        NativeSearchQueryBuilder builder1 = new NativeSearchQueryBuilder().withQuery(geoDistanceQueryBuilder).withSort(sortBuilder).withPageable(pageable);
+//
+//        SearchQuery searchQuery = builder1.build();
+//        List<TimeStoreVO> list =elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
 
-        BoolQueryBuilder boolQueryBuilder = boolQuery().mustNot(termQuery("city", "湖南"));
-        boolQueryBuilder.mustNot(geoDistanceQueryBuilder);
 
-        NativeSearchQueryBuilder builder1 = new NativeSearchQueryBuilder().withFilter(boolQueryBuilder).withSort(sortBuilder).withPageable(pageable);
 
-        SearchQuery searchQuery = builder1.build();
-        System.out.println(searchQuery.toString());
-        List<TimeStoreVO> list =elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
-        return ResponseWrap.success(list);
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("indextest").setTypes("product").setQuery(boolQueryBuilder).setFrom(0).setSize(50).addSort(sortBuilder);
+        SearchHits hits = searchRequestBuilder.execute().actionGet().getHits();
 
+
+
+//        return ResponseWrap.success(list);
+        return null;
     }
 
 
@@ -136,7 +149,7 @@ public class UserServiceImpl implements UserService{
             indexQuery.setId(i+"");
             TimeStoreVO timeStoreVO=new TimeStoreVO();
             timeStoreVO.setCity("深圳");
-            timeStoreVO.setId(Long.valueOf(i));
+            timeStoreVO.setUserId(Long.valueOf(i));
             GeoPoint geoPoint =new GeoPoint(dlat,dlon);
             timeStoreVO.setLocation(geoPoint);
             indexQuery.setObject(timeStoreVO);

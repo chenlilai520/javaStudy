@@ -1,6 +1,6 @@
 package com.spring.springstudy.service;
 
-import com.spring.springstudy.VO.UserVO;
+import com.spring.springstudy.VO.TimeStoreVO;
 import com.spring.springstudy.response.ResponseWrap;
 
 import java.util.List;
@@ -20,13 +20,13 @@ public interface UserService {
      * @param user
      * @return
      */
-    ResponseWrap insertUsert(UserVO user);
+    ResponseWrap insertUsert(TimeStoreVO user);
 
     /**
      * 查询所有数据
      * @return
      */
-    ResponseWrap<List<UserVO>> selectAll();
+    ResponseWrap<List<TimeStoreVO>> selectAll();
 
 
 

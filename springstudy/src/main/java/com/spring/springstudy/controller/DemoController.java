@@ -1,6 +1,6 @@
 package com.spring.springstudy.controller;
 
-import com.spring.springstudy.VO.UserVO;
+import com.spring.springstudy.VO.TimeStoreVO;
 import com.spring.springstudy.response.ResponseWrap;
 import com.spring.springstudy.service.UserService;
 import io.swagger.annotations.Api;
@@ -31,25 +31,25 @@ public class DemoController {
 
     @PostMapping("/add")
     @ApiOperation(value = "添加Elasticsearch数据")
-    public ResponseWrap add(@RequestBody UserVO user){
+    public ResponseWrap add(@RequestBody TimeStoreVO user){
         return         userService.insertUsert(user);
     }
 
     @PostMapping("/selectAll")
     @ApiOperation(value = "查询所有Elasticsearch数据")
-    public ResponseWrap<List<UserVO>> selectAll(){
+    public ResponseWrap<List<TimeStoreVO>> selectAll(){
         return  userService.selectAll();
     }
 
     @PostMapping("/bulkIndex")
     @ApiOperation(value = "批量添加Elasticsearch数据")
-    public ResponseWrap<List<UserVO>> bulkIndex(){
+    public ResponseWrap<List<TimeStoreVO>> bulkIndex(){
         return  userService.bulkIndex();
     }
 
     @PostMapping("/queryNearby")
     @ApiOperation(value = "查询附近的人")
-    public ResponseWrap<List<UserVO>> queryNearby(){
+    public ResponseWrap<List<TimeStoreVO>> queryNearby(){
         return  userService.queryNearby(114.02597366,22.54605355);
     }
 

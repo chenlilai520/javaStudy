@@ -12,9 +12,11 @@ import org.springframework.data.elasticsearch.annotations.Document;
  */
 @Document(indexName = "timestore", type = "product")
 public class TimeStoreVO {
-    private Long id;
+    private Long userId;
 
-    private String name;
+    private Integer age;
+
+    private  Integer sex;
 
     private String city;
 
@@ -28,20 +30,29 @@ public class TimeStoreVO {
         this.location = location;
     }
 
-    public Long getId() {
-        return id;
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     public String getCity() {
@@ -50,15 +61,5 @@ public class TimeStoreVO {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    @Override
-    public String toString() {
-        return "TimeStoreVO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", location=" + location +
-                '}';
     }
 }
