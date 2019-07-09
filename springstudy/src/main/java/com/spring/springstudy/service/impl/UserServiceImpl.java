@@ -1,5 +1,6 @@
 package com.spring.springstudy.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.spring.springstudy.VO.TimeStoreVO;
 import com.spring.springstudy.response.ResponseWrap;
 import com.spring.springstudy.service.UserService;
@@ -11,6 +12,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -22,12 +24,14 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * @author chenlilai
@@ -47,24 +51,20 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseWrap insertUsert(TimeStoreVO user) {
-        double lat = 22.54605324;
-        double lon = 114.02597315;
+        double lat = 22.5351131226;
+        double lon = 114.0301036835;
         TimeStoreVO timeStoreVO=new TimeStoreVO();
         timeStoreVO.setCity("湖南");
-        timeStoreVO.setUserId(11112L);
+        timeStoreVO.setUserId(user.getUserId());
         GeoPoint geoPoint =new GeoPoint(lat,lon);
         timeStoreVO.setLocation(geoPoint);
+        timeStoreVO.setAge(22);
+        timeStoreVO.setSex(1);
 
-        IndexQuery indexQuery = new IndexQueryBuilder().withId(1213 + "")
+        IndexQuery indexQuery = new IndexQueryBuilder().withId(user.getUserId() + "")
                 .withIndexName("timestore")
                 .withType("product")
                 .withObject(timeStoreVO).build();
-
-
-//        IndexQuery indexQuery = new IndexQueryBuilder().withId(user.getAge() + "")
-//                .withIndexName("my_test_index_004")
-//                .withType("product")
-//                .withObject(user).build();
 
         String index = elasticsearchTemplate.index(indexQuery);
         return ResponseWrap.success(index);
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService{
         SortBuilder sortBuilder = SortBuilders.fieldSort("age")   //排序字段
                 .order(SortOrder.DESC);   //排序方式
 
-        String[] include = {"name", "age","city"}; //需要显示的字段
+        String[] include = {"id", "age","city","sex","location"}; //需要显示的字段
 
         FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(include, null);   //两个参数分别是要显示的和不显示的
 
@@ -83,10 +83,8 @@ public class UserServiceImpl implements UserService{
         MatchQueryBuilder ageBuider =matchQuery("age","16");
         BoolQueryBuilder boolQueryBuilder=boolQuery().must(nameBuider).must(ageBuider);
 
-        boolQueryBuilder.mustNot(termQuery("id",11112));
 
-        SearchQuery searchQuery=  new NativeSearchQueryBuilder().withSourceFilter(fetchSourceFilter).
-                withQuery(boolQueryBuilder).withPageable(PageRequest.of(0,5)).withSort(sortBuilder)
+        SearchQuery searchQuery=  new NativeSearchQueryBuilder().withSourceFilter(fetchSourceFilter).withPageable(PageRequest.of(0,5)).withSort(sortBuilder)
                 //.withFilter(boolQuery().must(matchQuery("name","汤金浪")).filter(rangeQuery("age").gt(15))) // 这里是过滤条件
                 .build();
 
@@ -106,7 +104,7 @@ public class UserServiceImpl implements UserService{
 //        Pageable pageable =PageRequest.of(0, 50);
 //
         BoolQueryBuilder boolQueryBuilder = boolQuery();
-        boolQueryBuilder.mustNot(termQuery("city","湖"));
+     //   boolQueryBuilder.mustNot(termQuery("city","湖"));
         boolQueryBuilder.filter(geoDistanceQueryBuilder);
 
 //
@@ -116,14 +114,29 @@ public class UserServiceImpl implements UserService{
 //        List<TimeStoreVO> list =elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
 
 
+        List<TimeStoreVO>list=new ArrayList<>();
 
-        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("indextest").setTypes("product").setQuery(boolQueryBuilder).setFrom(0).setSize(50).addSort(sortBuilder);
+        String[] noinclude = {"location"}; //需要显示的字段
+
+        FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(null, noinclude);   //两个参数分别是要显示的和不显示的
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("timestore").setTypes("product").setQuery(boolQueryBuilder).setFrom(0).setSize(50).addSort(sortBuilder);
         SearchHits hits = searchRequestBuilder.execute().actionGet().getHits();
+        for (SearchHit hit : hits) {
+            // 获取距离值，并保留两位小数点
+            String sourceAsString = hit.getSourceAsString();
+            TimeStoreVO timeStoreVO = JSON.parseObject(sourceAsString, TimeStoreVO.class);
+            BigDecimal geoDis = new BigDecimal((Double) hit.getSortValues()[0]);
 
-
-
-//        return ResponseWrap.success(list);
-        return null;
+            if(geoDis.compareTo(BigDecimal.ONE)<0){
+                 timeStoreVO.setDistance(geoDis.multiply(BigDecimal.valueOf(1000)).setScale(0, BigDecimal.ROUND_DOWN)+"m");
+            }else if(geoDis.compareTo(BigDecimal.TEN)<0){
+                timeStoreVO.setDistance(geoDis.setScale(0, BigDecimal.ROUND_DOWN)+"km");
+            } else {
+                timeStoreVO.setDistance(timeStoreVO.getCity());
+            }
+            list.add(timeStoreVO);
+        }
+        return ResponseWrap.success(list);
     }
 
 
@@ -149,6 +162,12 @@ public class UserServiceImpl implements UserService{
             indexQuery.setId(i+"");
             TimeStoreVO timeStoreVO=new TimeStoreVO();
             timeStoreVO.setCity("深圳");
+            timeStoreVO.setAge(i-139999);
+            if(i%2==0){
+                timeStoreVO.setSex(1);
+            }else {
+                timeStoreVO.setSex(2);
+            }
             timeStoreVO.setUserId(Long.valueOf(i));
             GeoPoint geoPoint =new GeoPoint(dlat,dlon);
             timeStoreVO.setLocation(geoPoint);
@@ -161,7 +180,6 @@ public class UserServiceImpl implements UserService{
                 elasticsearchTemplate.bulkIndex(queries);
             }
         }
-
         return ResponseWrap.success();
 
     }

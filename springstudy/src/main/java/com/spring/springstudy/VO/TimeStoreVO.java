@@ -22,6 +22,16 @@ public class TimeStoreVO {
 
     private GeoPoint location;
 
+    private String distance;
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
     public GeoPoint getLocation() {
         return location;
     }
