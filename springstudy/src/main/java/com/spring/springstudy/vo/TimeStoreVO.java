@@ -1,4 +1,4 @@
-package com.spring.springstudy.VO;
+package com.spring.springstudy.vo;
 
 import org.elasticsearch.common.geo.GeoPoint;
 import org.springframework.data.elasticsearch.annotations.Document;

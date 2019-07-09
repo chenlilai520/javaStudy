@@ -1,7 +1,7 @@
 package com.spring.springstudy.service;
 
-import com.spring.springstudy.VO.TimeStoreVO;
 import com.spring.springstudy.response.ResponseWrap;
+import com.spring.springstudy.vo.TimeStoreVO;
 
 import java.util.List;
 

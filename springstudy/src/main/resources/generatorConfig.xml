@@ -21,7 +21,7 @@
                         password="root">
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.spring.springstudy.VO" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="com.spring.springstudy.vo" targetProject="src/main/java"/>
 
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 

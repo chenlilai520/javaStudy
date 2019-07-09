@@ -1,8 +1,8 @@
 package com.spring.springstudy.controller;
 
-import com.spring.springstudy.VO.TimeStoreVO;
 import com.spring.springstudy.response.ResponseWrap;
 import com.spring.springstudy.service.UserService;
+import com.spring.springstudy.vo.TimeStoreVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
