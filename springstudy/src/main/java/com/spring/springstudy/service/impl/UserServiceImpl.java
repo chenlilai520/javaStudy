@@ -81,10 +81,10 @@ public class UserServiceImpl implements UserService{
 
         MatchQueryBuilder nameBuider =matchQuery("name","汤金浪");
         MatchQueryBuilder ageBuider =matchQuery("age","16");
-        BoolQueryBuilder boolQueryBuilder=boolQuery().must(nameBuider).must(ageBuider);
+        BoolQueryBuilder boolQueryBuilder=boolQuery().mustNot(nameBuider).mustNot(ageBuider);
 
 
-        SearchQuery searchQuery=  new NativeSearchQueryBuilder().withSourceFilter(fetchSourceFilter).withPageable(PageRequest.of(0,5)).withSort(sortBuilder)
+        SearchQuery searchQuery=  new NativeSearchQueryBuilder().withSourceFilter(fetchSourceFilter).withSort(sortBuilder).withPageable(PageRequest.of(0,10000))
                 //.withFilter(boolQuery().must(matchQuery("name","汤金浪")).filter(rangeQuery("age").gt(15))) // 这里是过滤条件
                 .build();
 
@@ -101,28 +101,16 @@ public class UserServiceImpl implements UserService{
                 .unit(DistanceUnit.KILOMETERS)
                 .order(SortOrder.ASC);
 //
-//        Pageable pageable =PageRequest.of(0, 50);
 //
         BoolQueryBuilder boolQueryBuilder = boolQuery();
      //   boolQueryBuilder.mustNot(termQuery("city","湖"));
         boolQueryBuilder.filter(geoDistanceQueryBuilder);
 
-//
-//        NativeSearchQueryBuilder builder1 = new NativeSearchQueryBuilder().withQuery(geoDistanceQueryBuilder).withSort(sortBuilder).withPageable(pageable);
-//
-//        SearchQuery searchQuery = builder1.build();
-//        List<TimeStoreVO> list =elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
-
-
         List<TimeStoreVO>list=new ArrayList<>();
 
-        String[] noinclude = {"location"}; //需要显示的字段
-
-        FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(null, noinclude);   //两个参数分别是要显示的和不显示的
         SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("timestore").setTypes("product").setQuery(boolQueryBuilder).setFrom(0).setSize(50).addSort(sortBuilder);
         SearchHits hits = searchRequestBuilder.execute().actionGet().getHits();
         for (SearchHit hit : hits) {
-            // 获取距离值，并保留两位小数点
             String sourceAsString = hit.getSourceAsString();
             TimeStoreVO timeStoreVO = JSON.parseObject(sourceAsString, TimeStoreVO.class);
             BigDecimal geoDis = new BigDecimal((Double) hit.getSortValues()[0]);
