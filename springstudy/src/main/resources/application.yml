@@ -23,9 +23,12 @@ spring:
 #        enabled: true
 
 
-
  application:
     name: lilai
+ redis:
+  host: 127.0.0.1
+  port: 6379
+
 #cache:
 #  printData: false # 使用cache时是否输出日志数据 默认false第一个
 #  redis:

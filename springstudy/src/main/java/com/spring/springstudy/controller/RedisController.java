@@ -30,7 +30,7 @@ public class RedisController {
 
     @PostMapping("/addredis")
     @ApiOperation(value = "添加数据")
-    public ResponseWrap<List<TimeStoreVO>> addredis(){
+    public ResponseWrap<List<TimeStoreVO>> addredis() {
         redisService.addRedis();
         return ResponseWrap.success();
 

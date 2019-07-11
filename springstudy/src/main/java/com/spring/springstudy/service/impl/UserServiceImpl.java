@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * @author chenlilai
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService{
 //
 //
         BoolQueryBuilder boolQueryBuilder = boolQuery();
-     //   boolQueryBuilder.mustNot(termQuery("city","湖"));
+        boolQueryBuilder.must(termQuery("userId",140000));
         boolQueryBuilder.filter(geoDistanceQueryBuilder);
 
         List<TimeStoreVO>list=new ArrayList<>();

@@ -50,7 +50,8 @@ public class DemoController {
     @PostMapping("/queryNearby")
     @ApiOperation(value = "查询附近的人")
     public ResponseWrap<List<TimeStoreVO>> queryNearby(){
-        return  userService.queryNearby(114.0297496319,22.5356829253);
+//        return  userService.queryNearby(114.0297496319,22.5356829253);
+        return  userService.queryNearby(117.20217,40.736511);
     }
 
 

@@ -19,10 +19,8 @@ public class RedisServiceImpl implements RedisService {
     private RedisTemplate redisTemplate;
 
 
+
     @Override
     public void addRedis() {
-
-        redisTemplate.opsForValue().set("1","2");
-        System.out.println(redisTemplate.opsForValue().get(1));
     }
 }
