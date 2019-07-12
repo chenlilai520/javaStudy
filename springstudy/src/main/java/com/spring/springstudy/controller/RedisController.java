@@ -31,7 +31,7 @@ public class RedisController {
     @PostMapping("/addredis")
     @ApiOperation(value = "添加数据")
     public ResponseWrap<List<TimeStoreVO>> addredis() {
-        redisService.addRedis();
+        redisService.threadRun();
         return ResponseWrap.success();
 
     }

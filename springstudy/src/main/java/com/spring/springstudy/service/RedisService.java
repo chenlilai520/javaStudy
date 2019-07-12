@@ -11,4 +11,7 @@ public interface RedisService {
 
 
      void addRedis();
+
+     void threadRun();
+
 }

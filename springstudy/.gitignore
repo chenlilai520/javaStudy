@@ -1,4 +1,3 @@
-HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -10,12 +9,19 @@ HELP.md
 .settings
 .springBeans
 .sts4-cache
+.vscode
+.idea
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+*.mvn
+logs
+/src/main/docker/*.jar
+src/main/resources/config/application-*.yml
+src/main/resources/config/job.xml
 
 ### NetBeans ###
 /nbproject/private/
@@ -24,6 +30,3 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 /build/
-
-### VS Code ###
-.vscode/
