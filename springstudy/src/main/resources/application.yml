@@ -15,12 +15,6 @@ spring:
       local: false
       repositories:
         enabled: true
-##      cluster-name: cifmedia
-#      #      开发服 192.168.163.118  测试服 192.168.163.128
-#      cluster-nodes: 127.0.0.1:9300
-#      local: false
-#      repositories:
-#        enabled: true
 
 
  application:
@@ -29,23 +23,7 @@ spring:
   host: 127.0.0.1
   port: 6379
 
-#cache:
-#  printData: false # 使用cache时是否输出日志数据 默认false第一个
-#  redis:
-#    #hostname: 192.168.0.196
-#    #hostname: 192.168.110.40
-#    #port: 6379
-#    hostname: localhost
-#    port: 6379
-#    password:
-#
-#    timeout: 3000 # 读取超时 毫秒
-#    database: 0 #数据库index 默认0第一个
-#
-#    maxIdle: 30 #最大空闲连接数 默认30第一个
-#    maxActive: 50 #最大连接数, 默认50个
-#    maxWait: 10000 #获取连接时的最大等待毫秒数,如果超时就抛异常
-#    testOnBorrow: true #在获取连接的时候检查有效性, 默认true
+
 
 
 

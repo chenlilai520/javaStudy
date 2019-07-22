@@ -37,6 +37,9 @@ public class RedisServiceImpl implements RedisService {
                 redisTemplate.opsForValue().set("key",Integer.valueOf(key)+1);
                 System.out.println(redisTemplate.opsForValue().get("key").toString());
                 //业务
+
+               // redisTemplate.multi();// 开启一个事务
+                //redisTemplate.exec();//提交事务
             }
         } catch (InterruptedException e) {
 
@@ -50,6 +53,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void threadRun() {
         redisTemplate.opsForValue().set("key",0);
+        redisTemplate.watch("ss"); // 监听
        for(int i=0;i<5;i++){
            new Thread(() -> {
                addRedis();
