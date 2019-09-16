@@ -170,4 +170,22 @@ public class UserServiceImpl implements UserService{
         return ResponseWrap.success();
 
     }
+
+
+    @Override
+    public ResponseWrap timeStore() {
+
+        SortBuilder sortBuilder = SortBuilders.fieldSort("age")   //排序字段
+                .order(SortOrder.DESC);   //排序方式
+
+        String[] include = { "age","city","headUrl","location","name"}; //需要显示的字段
+
+        FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(include, null);   //两个参数分别是要显示的和不显示的
+
+
+        SearchQuery searchQuery=  new NativeSearchQueryBuilder().withSourceFilter(fetchSourceFilter).withSort(sortBuilder).withPageable(PageRequest.of(0,10))
+                .build();
+        List<TimeStoreVO> list=elasticsearchTemplate.queryForList(searchQuery,TimeStoreVO.class);
+        return ResponseWrap.success(list);
+}
 }

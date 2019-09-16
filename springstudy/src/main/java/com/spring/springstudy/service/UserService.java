@@ -34,4 +34,7 @@ public interface UserService {
 
 
     ResponseWrap bulkIndex();
+
+
+    ResponseWrap timeStore();
 }

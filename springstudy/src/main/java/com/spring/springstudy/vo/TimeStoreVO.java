@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
  * @description:
  * @date 2019/7/415:18
  */
-@Document(indexName = "timestore", type = "product")
+@Document(indexName = "time_store")
 public class TimeStoreVO {
     private Long userId;
 

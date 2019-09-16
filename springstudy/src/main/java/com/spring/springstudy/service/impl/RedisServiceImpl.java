@@ -25,6 +25,7 @@ public class RedisServiceImpl implements RedisService {
     @Autowired
     private RedissonClient redissonClient;
 
+
     @Override
     public void addRedis() {
         RLock lock=null;
