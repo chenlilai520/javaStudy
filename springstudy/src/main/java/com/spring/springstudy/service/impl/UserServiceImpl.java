@@ -73,7 +73,6 @@ public class UserServiceImpl implements UserService{
     public ResponseWrap<List<TimeStoreVO>> selectAll() {
         SortBuilder sortBuilder = SortBuilders.fieldSort("age")   //排序字段
                 .order(SortOrder.DESC);   //排序方式
-
         String[] include = {"id", "age","city","sex","location"}; //需要显示的字段
 
         FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(include, null);   //两个参数分别是要显示的和不显示的
