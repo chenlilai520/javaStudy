@@ -29,7 +29,6 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void addRedis() {
         RLock lock=null;
-
         try {
             lock=redissonClient.getLock("ss");
             boolean res=lock.tryLock(5,5,TimeUnit.SECONDS);  //最多等待5秒 加锁时间5秒

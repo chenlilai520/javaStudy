@@ -24,6 +24,12 @@ public class TimeStoreVO {
 
     private String distance;
 
+    public TimeStoreVO() {
+    }
+
+    public TimeStoreVO(TimeStoreVO timeStoreVO) {
+    }
+
     public String getDistance() {
         return distance;
     }
@@ -71,5 +77,17 @@ public class TimeStoreVO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    @Override
+    public String toString() {
+        return "TimeStoreVO{" +
+                "userId=" + userId +
+                ", age=" + age +
+                ", sex=" + sex +
+                ", city='" + city + '\'' +
+                ", location=" + location +
+                ", distance='" + distance + '\'' +
+                '}';
     }
 }

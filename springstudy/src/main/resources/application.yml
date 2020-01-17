@@ -11,17 +11,24 @@ spring:
  data:
     elasticsearch:
 #      cluster-name: docker-cluster
-      cluster-nodes: 192.168.163.128:9300
+      cluster-nodes: 192.168.217.129:9300
       local: false
       repositories:
         enabled: true
-
+ elasticsearch:
+     rest:
+       uris: ["http://192.168.217.129:9200"]
 
  application:
     name: lilai
  redis:
   host: 127.0.0.1
   port: 6379
+
+#security:
+#  basic:
+#    enabled: false
+
 
 
 
@@ -39,3 +46,8 @@ project:
           contactEmail:
           license:
           licenseUrl:
+
+
+secretKey:  cifmedia
+tokenValidityInSeconds: 86400000
+
